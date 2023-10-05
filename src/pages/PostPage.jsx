@@ -1,9 +1,8 @@
 import React from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useOutletContext } from 'react-router-dom';
 
-const PostPage = ({ posts, handleDelete }) => {
-    const { id } = useParams();
-    const post = posts.find(post => post.id.toString() === id);
+const PostPage = ({ handleDelete }) => {
+    const { post } = useOutletContext();
     const navigate = useNavigate();
     
     return (
@@ -11,7 +10,7 @@ const PostPage = ({ posts, handleDelete }) => {
             <article className='post'>
                 {post && 
                     <>
-                        <button id='backbutton' onClick={() => navigate('/')}>&larr; Back</button>
+                        <button id='backbutton' onClick={() => navigate('/posts')}>&larr; Back</button>
                         <h2>{post.title}</h2>
                         <p className='postDate'>{post.datetime}</p>
                         <p className='postBody'>{post.body}</p>
@@ -22,7 +21,7 @@ const PostPage = ({ posts, handleDelete }) => {
                 {!post && 
                     <>
                         <h2>Post not found</h2>
-                        <Link to='/'>Visit homepage</Link>
+                        <Link to='/posts'>Visit homepage</Link>
                     </>
                 }
             </article>

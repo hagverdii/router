@@ -1,11 +1,10 @@
 import React, { useEffect } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useOutletContext } from 'react-router-dom';
 
 const EditPage = ({
-    posts, handleEdit, editBody, setEditBody, editTitle, setEditTitle
+    handleEdit, editBody, setEditBody, editTitle, setEditTitle
 }) => {
-    const { id } = useParams();
-    const post = posts.find(post => post.id.toString() === id);
+    const { post } = useOutletContext();
     const navigate = useNavigate();
 
     useEffect(() => {

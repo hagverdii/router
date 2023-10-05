@@ -9,8 +9,8 @@ import NewPost from './pages/NewPost';
 import PostPage from './pages/PostPage';
 import About from './pages/About';
 import Missing from './pages/Missing';
+import PostsData from './PostsData';
 import axiosApi from './api/posts';
-import { id } from 'date-fns/locale';
 import EditPage from './pages/EditPage';
 
 const App = () => {
@@ -53,7 +53,7 @@ const App = () => {
             await axiosApi.delete(`/posts/${id}`);
             const postsList = posts.filter(post => post.id !== id);
             setPosts(postsList);
-            navigate('/');
+            navigate('/posts');
         } catch (err) {
             console.log(err.message);
         }
@@ -67,7 +67,7 @@ const App = () => {
             setPosts(posts.map(post => post.id === id ? response.data : post));
             setEditTitle('');
             setEditBody('');
-            navigate('');
+            navigate(`/posts/${id}`);
         } catch (err) {
             console.log(err.message);
         }
@@ -84,7 +84,7 @@ const App = () => {
             setPosts(allPosts);
             setPostTitle('');
             setPostBody('');
-            navigate('/');
+            navigate('/posts');
         } catch (err) {
             console.log(err.message);
         }
@@ -96,21 +96,25 @@ const App = () => {
             <Header title='React JS Blog' />
             <Nav search={search} setSearch={setSearch}/>
             <Routes>
-                <Route path='/' element={<Home posts={searchResults} />} />
-                <Route path='/posts/new' element={<NewPost 
-                    handleSubmit={handleSubmit} 
-                    postTitle={postTitle} 
-                    setPostTitle={setPostTitle} 
-                    postBody={postBody} 
-                    setPostBody={setPostBody} />} />
-                <Route path='/posts/:id' element={<PostPage posts={posts} handleDelete={handleDelete} />} />
-                <Route path='/posts/:id/edit' element={<EditPage 
-                    posts={posts} 
-                    handleEdit={handleEdit} 
-                    editTitle={editTitle} 
-                    setEditTitle={setEditTitle} 
-                    editBody={editBody} 
-                    setEditBody={setEditBody} />} />
+                <Route path='/posts'>
+                    <Route index element={<Home posts={searchResults} />} />
+                    <Route path='new' element={<NewPost 
+                        handleSubmit={handleSubmit} 
+                        postTitle={postTitle} 
+                        setPostTitle={setPostTitle} 
+                        postBody={postBody} 
+                        setPostBody={setPostBody} />} />
+                    <Route path=':id' element={<PostsData posts={posts} />}>
+                        <Route index element={<PostPage
+                            handleDelete={handleDelete} />} />
+                        <Route path='edit' element={<EditPage
+                            handleEdit={handleEdit} 
+                            editTitle={editTitle} 
+                            setEditTitle={setEditTitle} 
+                            editBody={editBody} 
+                            setEditBody={setEditBody} />} />
+                    </Route>
+                </Route>
                 <Route path='/about' element={<About />} />
                 <Route path='*' element={<Missing />} />
             </Routes>
