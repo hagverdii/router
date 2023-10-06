@@ -1,13 +1,13 @@
 import {createContext, useState, useEffect} from "react";
 import useAxiosFetch from "../hooks/useAxiosFetch.js";
 
-const DataContext = createContext({});
+const DataContext =  createContext({});
 
-export const DataProvider = ({ children }) => {
+export const DataContextProvider = ({ children }) => {
     const [posts, setPosts] = useState([]);
     const [search, setSearch] = useState('');
     const [searchResults, setSearchResults] = useState([]);
-    const { data, fetchError, isLoading } = useAxiosFetch('http://localhost:3500/posts');
+    const {data, fetchError, isLoading} = useAxiosFetch('http://localhost:3500/posts');
 
     useEffect(() => {
         setPosts(data);

@@ -10,13 +10,13 @@ import About from './pages/About';
 import Missing from './pages/Missing';
 import PostsData from './PostsData';
 import EditPage from './pages/EditPage';
-import {DataProvider} from "./context/DataContext.jsx";
+import {DataContextProvider} from "./context/DataContext.jsx";
 
 const App = () => {
     return (
         <div className='App'>
             <Header title='React JS Blog' />
-            <DataProvider>
+            <DataContextProvider>
                 <Nav />
                 <Routes>
                     <Route path='/posts'>
@@ -30,7 +30,7 @@ const App = () => {
                     <Route path='/about' element={<About />} />
                     <Route path='*' element={<Missing />} />
                 </Routes>
-            </DataProvider>
+            </DataContextProvider>
             <Footer />
         </div>
     );
