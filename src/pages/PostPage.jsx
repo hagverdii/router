@@ -1,10 +1,24 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import { Link, useNavigate, useOutletContext } from 'react-router-dom';
+import axios from "axios";
+import DataContext from "../context/DataContext.jsx";
 
-const PostPage = ({ handleDelete }) => {
+const PostPage = () => {
     const { post } = useOutletContext();
     const navigate = useNavigate();
-    
+    const { posts, setPosts } = useContext(DataContext);
+
+    const handleDelete = async (id) => {
+        try {
+            await axios.delete(`http://localhost:3500/posts/${id}`);
+            const postsList = posts.filter(post => post.id !== id);
+            setPosts(postsList);
+            navigate('/posts');
+        } catch (err) {
+            console.log(err.message);
+        }
+    }
+
     return (
         <main className='PostPage'>
             <article className='post'>

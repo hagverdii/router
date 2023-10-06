@@ -1,10 +1,12 @@
 import React from 'react';
+import useWindowSize from "./hooks/useWindowSize.js";
 
-const Header = ({ title, width }) => {
+const Header = ({ title }) => {
+    const { width } = useWindowSize();
     return (
         <header className='Header'>
             <h1>{ title }</h1>
-            {width < 900 ? <h3>{'<900'}</h3> : <h3>{'>900'}</h3>}
+            <h4>{`Width: ${width}px`}</h4>
         </header>
     );
 };
