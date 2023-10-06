@@ -231,7 +231,9 @@ body {
 }
 
 #backbutton {
-    padding: .35rem;
+    padding: .45rem;
+    font-size: 1rem;
+    border-radius: 5px;
     margin: 0 0 1rem 0;
     color: black;
     background-color: lightblue;

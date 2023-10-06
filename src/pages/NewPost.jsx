@@ -8,7 +8,7 @@ const NewPost = ({
 
     return (
         <main className='NewPost'>
-            <button id='backbutton' onClick={() => navigate('/')}>&larr; Back</button>
+            <button id='backbutton' onClick={() => navigate('/posts')}>&larr; Back</button>
             <h2>New Post</h2>
             <form className='newPostForm' onSubmit={handleSubmit}>
                 <label htmlFor="postTitle">Title:</label>
