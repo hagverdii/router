@@ -10,8 +10,10 @@ import PostPage from './pages/PostPage';
 import About from './pages/About';
 import Missing from './pages/Missing';
 import PostsData from './PostsData';
-import axiosApi from './api/posts';
+import axios from "axios";
 import EditPage from './pages/EditPage';
+import useWindowSize from "./hooks/useWindowSize.js";
+import useAxiosFetch from "./hooks/useAxiosFetch.js";
 
 const App = () => {
     const [posts, setPosts] = useState([]);
@@ -21,25 +23,13 @@ const App = () => {
     const [postBody, setPostBody] = useState('');
     const [editTitle, setEditTitle] = useState('');
     const [editBody, setEditBody] = useState('');
+    const { width } = useWindowSize();
+    const { data, fetchError, isLoading } = useAxiosFetch('http://localhost:3500/posts');
     const navigate = useNavigate();
 
     useEffect(() => {
-        const fetchPosts = async () => {
-            try {
-                const response = await axiosApi.get('/posts');
-                setPosts(response.data);
-            } catch (err) {
-                if (err.response) {
-                    console.log(err.response.data);
-                    console.log(err.response.status);
-                    console.log(err.response.headers);            
-                } else {
-                    console.log(err.message);
-                }
-            }
-        }
-        fetchPosts();
-    }, []);
+        setPosts(data);
+    }, [data]);
 
     useEffect(() => {
         const filteredResults = posts.filter(post => {
@@ -50,7 +40,7 @@ const App = () => {
 
     const handleDelete = async (id) => {
         try {
-            await axiosApi.delete(`/posts/${id}`);
+            await axios.delete(`http://localhost:3500/posts/${id}`);
             const postsList = posts.filter(post => post.id !== id);
             setPosts(postsList);
             navigate('/posts');
@@ -60,10 +50,10 @@ const App = () => {
     }
 
     const handleEdit = async (id) => {
-        const datetime = format(new Date(), 'MMMM dd, yyyy pp');
+        const datetime = format(new Date(), 'dd/MM/yyyy - pp');
         const updatedPost = { id, title: editTitle, datetime, body: editBody };
         try {
-            const response = await axiosApi.put(`/posts/${id}`, updatedPost);
+            const response = await axios.put(`http://localhost:3500/posts/${id}`, updatedPost);
             setPosts(posts.map(post => post.id === id ? response.data : post));
             setEditTitle('');
             setEditBody('');
@@ -79,7 +69,7 @@ const App = () => {
         const datetime = format(new Date(), 'MMMM dd, yyyy pp');
         const newPost = { id, title: postTitle, datetime, body: postBody };
         try {
-            const response = await axiosApi.post('/posts', newPost);
+            const response = await axios.post('http:/localhost:3500/posts', newPost);
             const allPosts = [...posts, response.data];
             setPosts(allPosts);
             setPostTitle('');
@@ -93,11 +83,14 @@ const App = () => {
 
     return (
         <div className='App'>
-            <Header title='React JS Blog' />
+            <Header title='React JS Blog' width={width} />
             <Nav search={search} setSearch={setSearch}/>
             <Routes>
                 <Route path='/posts'>
-                    <Route index element={<Home posts={searchResults} />} />
+                    <Route index element={<Home
+                        posts={searchResults}
+                        fetchError={fetchError}
+                        isLoading={isLoading} />} />
                     <Route path='new' element={<NewPost 
                         handleSubmit={handleSubmit} 
                         postTitle={postTitle} 
